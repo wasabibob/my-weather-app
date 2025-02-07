@@ -32,20 +32,7 @@ def get_weather():
     if not bool(city.strip()):
         # You could render "City Not Found" instead like we do below
         city = "Denver"
-    
-    flag_value = ldclient.get().variation(feature_flag_key, context, False)
-    show_evaluation_result(feature_flag_key, flag_value)
-
-    if ci is None:
-        change_listener = FlagValueChangeListener()
-        listener = ldclient.get().flag_tracker \
-            .add_flag_value_change_listener(feature_flag_key, context, change_listener.flag_value_change_listener)
         
-#        with Halo(text='Waiting for changes', spinner='dots'):
-#            try:
-#                Event().wait()
-#            except KeyboardInterrupt:
-#                pass
     weather_data = get_current_weather(city)
     
     # City is not found by API
@@ -64,6 +51,14 @@ def get_weather():
         # LaunchDarkly contexts dashboard soon after you run the demo.
         context = \
             Context.builder('example-user-key').kind('weather-city').name(city).tempature(temp).build()
+        
+        flag_value = ldclient.get().variation(feature_flag_key, context, False)
+        show_evaluation_result(feature_flag_key, flag_value)
+
+        if ci is None:
+            change_listener = FlagValueChangeListener()
+            listener = ldclient.get().flag_tracker \
+                .add_flag_value_change_listener(feature_flag_key, context, change_listener.flag_value_change_listener)
         
         return render_template(
             "weather-plus.html",
