@@ -4,6 +4,12 @@
     box-sizing: border-box;
 }
 
+.container {
+    position: relative;
+    text-align: center;
+    color: white;
+  }
+
 div.picture1 {
     width:626px; /*width of your image*/
     height:188px; /*height of your image*/
@@ -11,11 +17,12 @@ div.picture1 {
     margin:0; /* If you want no margin */
     padding:0; /*if your want to padding */
  }
- 
-/*
-section {
-    background: url('images/sunset.jpg') ;
-  } */
+
+.bottom-right {
+    position: absolute;
+    bottom: 8px;
+    right: 16px;
+  }
 
 body {
     padding: 2rem;
