@@ -54,6 +54,7 @@ It's pretty simple...
     export LAUNCHDARKLY_SDK_KEY="1234567890abcdef"
     export LAUNCHDARKLY_FLAG_KEY="new-banner"
     ```
+    NOTE: you can optionally set the environment variable "CI" to skip evaluating the feature flag
     
 1. [Sign up](https://openweathermap.org/appid#signup) for a free account at OpenWeatherMap.org and create an API key
    * Copy and save the API Key for use later

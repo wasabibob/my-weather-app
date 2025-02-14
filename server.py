@@ -46,12 +46,6 @@ def get_weather():
         listener = ldclient.get().flag_tracker \
             .add_flag_value_change_listener(feature_flag_key, context, change_listener.flag_value_change_listener)
 
-        
-#        with Halo(text='Waiting for changes', spinner='dots'):
-#            try:
-#                Event().wait()
-#            except KeyboardInterrupt:
-#                pass
     weather_data = get_current_weather(city)
 
     # City is not found by API
