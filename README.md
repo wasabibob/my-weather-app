@@ -45,9 +45,7 @@ It's pretty simple...
 ### Prerequisites
 
 * Install Python3 [installation package](https://www.python.org/downloads/)
-* Install [pip](https://docs.docker.com/get-started/)
-* 
-
+* Ensure you can run [pip](https://docs.docker.com/get-started/](https://packaging.python.org/en/latest/tutorials/installing-packages/#ensure-pip-setuptools-and-wheel-are-up-to-date)
 
 ## Build
 
@@ -56,66 +54,58 @@ It's pretty simple...
     export LAUNCHDARKLY_SDK_KEY="1234567890abcdef"
     export LAUNCHDARKLY_FLAG_KEY="new-banner"
     ```
+    
 1. [Sign up](https://openweathermap.org/appid#signup) for a free account at OpenWeatherMap.org and create an API key
    * Copy and save the API Key for use later
-1. ? Ensure you have [Poetry](https://python-poetry.org/) installed.
-1. ? Install the required dependencies with `poetry install`.
 
 1.  Clone the repo
     ```bash
     git clone git@github.com:wasabibob/my-weather-app
     ```
-1. Install Python Virtual Environment
+    
+1. Install Python Virtual Environment, waitress and the LaunchDarkly SDK
    ```bash
    cd my-weather-app
    python3 -m venv .venv
    source .venv/bin/activate
    pip install requests python-dotenv Flask
    pip install --upgrade pip
+   pip install waitress
+   pip install launchdarkly-server-sdk
    ```
-1. Create .env file for environment variables, and put your OpenWeatherMap API key and the LaunchDarkly Key in this file.
+   
+1. Create .env file for environment variables, and put your OpenWeatherMap API key and the LaunchDarkly Key in this file
    ```bash
    cd my-weather-app
    touch .env
    echo "API_KEY=<put your OpenWeatherMap API key here>" >>.env
    echo "LAUNCHDARKLY_SDK_KEY=<put your LaunchDarkly SDK key here>" >>.env
-   ```
-   
-      
-
-    
+   ```    
    
 ## Run Lcally
 
 Run the python app image in your local environment from the terminal window\
 Once running, you can see the app by opening a browser and browsing to **localhost:8000**
 
-### In a terminal
-
-From the application source home directory (my-weather-app)
-```python3 weather.py
+### In a terminal window From the application source home directory (my-weather-app)
+* To run in CLI mode and validate your connection to OpenWeatherMap.org and LaunchDarkly
+   ```bash
+   python3 weather.py
    ```
-1. On the command line, run `poetry run python main.py`
-You should receive the message "The <flagKey> feature flag evaluates to <flagValue>.". The application will run continuously and react to the flag changes in LaunchDarkly.```
+You should receive the message "The <flagKey> feature flag evaluates to <flagValue>.". 
+The application will run continuously and react to the flag changes in LaunchDarkly.```
 
+* To run the this app in the Flask webserver and see the feature live
+   ```bash
+   python3 server.py
+   ```
 
 ## Test
 
 ### From desktop browser
 
 1. Navigate to images tab and locate your most recent build (typicaly at the bottom of the list)
-2. Click on the play/run button under the Actions column
-3. In the **Run a new container** diaglog box, under **Optional setting**, replace **Host port** with the value **5500**
-4. Click **Run**
-
-5. 
-1. Tests are functions defined in the tests.py file
-2. These will automatically run as part of the **GitHub Actions Workflow** which is found in the .github/workflows folder
-3. To run the workflow, simply commit a change to your GitHub repsoitory, this will start the GitHub Actions Workflow
-4. In your browser, navigate to your GitHub repository and slect the **Actions** tab
-5. Click on the most recent workflow (named after your recent commit)
-6. In the **docker-image.yaml** workflow select the **docker** run to see the test results as part of the workflow output
-
+2. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
