@@ -1,8 +1,3 @@
-# my-weather-app
-The instructions need to explain — in detail — how the reader can run the example locally on their machine. Be sure to\
-include relevant comments in the code, (e.g. where the SDK key needs to be replaced, or where afeature flag needs to be\
-re-created by the user, etc.).
-
 <a id="readme-top"></a>
 
 <br />
@@ -37,9 +32,9 @@ re-created by the user, etc.).
 
 It's pretty simple... 
 * Get a free account at [LaunchDarkly](https://docs.launchdarkly.com/home/getting-started) (if you don't already have one)
-  * Create an LaunchDarkly SDK (API) Key and a Feature Flag as part of the getting started process
+  * Create an LaunchDarkly SDK (API) Access Token and a Feature Flag as part of the getting started process
   * Copy and save the LaunchDarkly SDK Key for use later
-* Get a free account with [OpenWeatherMap.org](https://openweathermap.org) and create an API key
+* Get a free account with [OpenWeatherMap.org](https://openweathermap.org) and create an API Token
 * clone this [repository](https://github.com/wasabibob/my-weather-app). then build, run & test
 
 ### Prerequisites
@@ -49,15 +44,16 @@ It's pretty simple...
 
 ## Build
 
-1. Set the environment variable `LAUNCHDARKLY_SDK_KEY` to your LaunchDarkly SDK key. If there is an existing boolean feature flag in your LaunchDarkly project that you want to evaluate, set `LAUNCHDARKLY_FLAG_KEY` to the flag key; In this exaqmple `new-banner`.
+1. Ensure you have registered for a [free trial account](https://docs.launchdarkly.com/home/getting-started#1-sign-up-for-a-free-trial) with LaunchDarkly
+1. Create an [Personal Access Token](https://docs.launchdarkly.com/home/account/api-create/?q=create+access#create-access-tokens) for your SDK API connection giving the Role `writer` access
+   **Copy and save the token value for future use** 
+1. [Create a Feature Flag](https://docs.launchdarkly.com/home/getting-started#3-create-your-first-feature-flag) named `new-banner`to use for this exercise
+1. Set the environment variable `LAUNCHDARKLY_SDK_KEY` to your LaunchDarkly SDK key. If there is an existing boolean feature flag in your LaunchDarkly project that you want to evaluate, set `LAUNCHDARKLY_FLAG_KEY` to the flag key; In this exaqmple webapp it should be `new-banner`.
     ```bash
     export LAUNCHDARKLY_SDK_KEY="1234567890abcdef"
     export LAUNCHDARKLY_FLAG_KEY="new-banner"
     ```
     NOTE: you can optionally set the environment variable "CI" to skip evaluating the feature flag
-    
-1. [Sign up](https://openweathermap.org/appid#signup) for a free account at OpenWeatherMap.org and create an API key
-   * Copy and save the API Key for use later
 
 1.  Clone the repo
     ```bash
