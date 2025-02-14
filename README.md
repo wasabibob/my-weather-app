@@ -84,29 +84,27 @@ It's pretty simple...
    ```    
    
 ## Run Lcally
-
-Run the python app image in your local environment from the terminal window\
-Once running, you can see the app by opening a browser and browsing to **localhost:8000**
-
+   See the feature live Run the python app image in your local environment from the terminal window
+   
 ### In a terminal window From the application source home directory (my-weather-app)
-* To run in CLI mode and validate your connection to OpenWeatherMap.org and LaunchDarkly
+* To run in CLI mode (one-off) and validate your connection to OpenWeatherMap.org and LaunchDarkly
    ```bash
    python3 weather.py
    ```
-You should receive the message "The <flagKey> feature flag evaluates to <flagValue>.". 
-The application will run continuously and react to the flag changes in LaunchDarkly.```
+   Enter a city on the command line prompt and it will connect to the API and return weather data
 
-* To run the this app in the Flask webserver and see the feature live
+* To run the this app in the Flask webserver. Once running, you can see the app by opening a browser and browsing to **localhost:8000**
    ```bash
    python3 server.py
    ```
-
+   NOTE: You should receive the message in the CLI "The **FLAG KEY** feature flag evaluates to **FLAG VALUE**"\
+         The application will run continuously and react to the flag changes in LaunchDarkly
 ## Test
 
 ### From desktop browser
 
-1. Navigate to images tab and locate your most recent build (typicaly at the bottom of the list)
-2. 
+1. Navigate to **locahost:8000/weather** and enter a city to retrieve weather information
+2. Toggle the LaunchDarkly Flag to turn on or off the travel banner
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
