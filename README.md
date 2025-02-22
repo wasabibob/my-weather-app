@@ -35,6 +35,8 @@ It's pretty simple...
   * Create an LaunchDarkly SDK (API) Access Token and a Feature Flag as part of the getting started process
   * Copy and save the LaunchDarkly SDK Key for use later
 * Get a free account with [OpenWeatherMap.org](https://openweathermap.org) and create an API Token
+  * A usable API token should be automatically created for you upon account creation
+  * It should be available inside your profile, under "My API Keys"
 * clone this [repository](https://github.com/wasabibob/my-weather-app). then build, run & test
 
 ### Prerequisites
@@ -48,12 +50,15 @@ It's pretty simple...
 1. Create an [Personal Access Token](https://docs.launchdarkly.com/home/account/api-create/?q=create+access#create-access-tokens) for your SDK API connection giving the Role `writer` access
    **Copy and save the token value for future use** 
 1. [Create a Feature Flag](https://docs.launchdarkly.com/home/getting-started#3-create-your-first-feature-flag) named `new-banner`to use for this exercise
-1. Set the environment variable `LAUNCHDARKLY_SDK_KEY` to your LaunchDarkly SDK key. If there is an existing boolean feature flag in your LaunchDarkly project that you want to evaluate, set `LAUNCHDARKLY_FLAG_KEY` to the flag key; In this exaqmple webapp it should be `new-banner`.
+1. Set the necessary environment variables
+  * Note: `LAUNCHDARKLY_SDK_KEY` should be set to the LaunchDarkly SDK key for the environment you want to use
+  * Note: `LAUNCHDARKLY_FLAG_KEY` should be set to the flag key of the flag you'll be using to toggle your new banner on and off. Unless you have a really good reason to change it, please leave this set to `new-banner`.
     ```bash
-    export LAUNCHDARKLY_SDK_KEY="1234567890abcdef"
+    export LAUNCHDARKLY_SDK_KEY="<Your SDK KEY>"
     export LAUNCHDARKLY_FLAG_KEY="new-banner"
     ```
     NOTE: you can optionally set the environment variable "CI" to skip evaluating the feature flag
+    # Set to what? Most people won't be familiar with the concept of a blank ENV variable.
 
 1.  Clone the repo
     ```bash
@@ -62,7 +67,7 @@ It's pretty simple...
     
 1. Install Python Virtual Environment, waitress and the LaunchDarkly SDK
    ```bash
-   cd my-weather-app
+   cd my-weather-app # A total nit, but I don't love including `cd` commands in example scripts, it can get confusing
    python3 -m venv .venv
    source .venv/bin/activate
    pip install requests python-dotenv Flask
@@ -73,13 +78,13 @@ It's pretty simple...
    
 1. Create .env file for environment variables, and put your OpenWeatherMap API key and the LaunchDarkly Key in this file
    ```bash
-   cd my-weather-app
+   cd my-weather-app # See my comment above. If you actually just copy/paste these commands as is, this cd fails, since you're already in the directory
    touch .env
    echo "API_KEY=<put your OpenWeatherMap API key here>" >>.env
-   echo "LAUNCHDARKLY_SDK_KEY=<put your LaunchDarkly SDK key here>" >>.env
+   echo "LAUNCHDARKLY_SDK_KEY=<put your LaunchDarkly SDK key here>" >>.env # Consdiering we just set this variable earlier, this seems superfluous to me
    ```    
    
-## Run Lcally
+## Run Locally
    See the feature live Run the python app image in your local environment from the terminal window
    
 ### In a terminal window From the application source home directory (my-weather-app)
@@ -88,6 +93,7 @@ It's pretty simple...
    python3 weather.py
    ```
    Enter a city on the command line prompt and it will connect to the API and return weather data
+   * Note: If you recieve a 401 error here, wait a few minutes and try again. It takes OpenWeather a little while to initialize a new account.
 
 * To run the this app in the Flask webserver. Once running, you can see the app by opening a browser and browsing to **localhost:8000**
    ```bash
@@ -99,7 +105,7 @@ It's pretty simple...
 
 ### From desktop browser
 
-1. Navigate to **locahost:8000/weather** and enter a city to retrieve weather information
+1. Navigate to **locahost:8000/index** and enter a city to retrieve weather information
 2. Toggle the LaunchDarkly Flag to turn on or off the travel banner
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
