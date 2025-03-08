@@ -2,9 +2,12 @@ import os
 import ldclient
 from ldclient import Context
 from ldclient.config import Config
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from weather import get_current_weather
 from waitress import serve
+from dotenv import load_dotenv
+from threading import Lock, Event
+
 
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
@@ -14,10 +17,10 @@ feature_flag_key = os.getenv('LAUNCHDARKLY_FLAG_KEY', 'new-banner')
 
 # Set this environment variable to skip the loop process and evaluate the flag
 # a single time.
-ci = os.getenv('CI')
+#ci = os.getenv('CI')
 
 app = Flask(__name__)
-
+load_dotenv()
 
 @app.route('/')
 @app.route('/index')
@@ -26,6 +29,23 @@ def index():
 
 @app.route('/weather')
 def get_weather():
+    
+    # Set up the evaluation context. This context should appear on your
+    # LaunchDarkly contexts dashboard soon after you run the demo.
+    #context = \
+    #    Context.builder('example-user-key').kind('weather-city').name(city).build()
+    context = Context.builder("example-user-key").kind("user").name("Tony").build()
+    
+    # Evaluate the feature flag
+    flag_value = ldclient.get().variation(feature_flag_key, context, False)
+    show_evaluation_result(feature_flag_key, flag_value)
+    
+    # Add a listener to the flag
+    change_listener = FlagValueChangeListener()
+    listener = ldclient.get().flag_tracker \
+        .add_flag_value_change_listener(feature_flag_key, context, change_listener.flag_value_change_listener)
+    
+    # Get the city from the query string
     city = request.args.get('city')
 
     # Check for empty strings or string with only spaces
@@ -33,21 +53,9 @@ def get_weather():
         # You could render "City Not Found" instead like we do below
         city = "Denver"
     
-    # Set up the evaluation context. This context should appear on your
-    # LaunchDarkly contexts dashboard soon after you run the demo.
-    context = \
-        Context.builder('example-user-key').kind('weather-city').name(city).build()
-
-    flag_value = ldclient.get().variation(feature_flag_key, context, False)
-    show_evaluation_result(feature_flag_key, flag_value)
-
-    if ci is None:
-        change_listener = FlagValueChangeListener()
-        listener = ldclient.get().flag_tracker \
-            .add_flag_value_change_listener(feature_flag_key, context, change_listener.flag_value_change_listener)
-
     weather_data = get_current_weather(city)
-
+    app.logger.debug("weatther data: %s", weather_data)
+    
     # City is not found by API
     if not weather_data['cod'] == 200:
         return render_template('city-not-found.html')
@@ -97,5 +105,6 @@ if __name__ == "__main__":
 
     print("*** SDK successfully initialized")
     
-    serve(app, host="0.0.0.0", port=8000)
-#    app.run(host="0.0.0.0", port=8000)
+    app.run(host="0.0.0.0", debug=True, port=8000)
+    #use serve if you want to use waitress or publish to render.com
+    #serve(app, host="0.0.0.0", port=8000)  
