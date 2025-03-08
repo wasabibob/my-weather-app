@@ -53,15 +53,14 @@ It's pretty simple...
 1. Set the necessary environment variables
   * Note: `LAUNCHDARKLY_SDK_KEY` should be set to the LaunchDarkly SDK key for the environment you want to use
   * Note: `LAUNCHDARKLY_FLAG_KEY` should be set to the flag key of the flag you'll be using to toggle your new banner on and off. Unless you have a really good reason to change it, please leave this set to `new-banner`.
-    ```bash
-    export LAUNCHDARKLY_SDK_KEY="<Your SDK KEY>"
-    export LAUNCHDARKLY_FLAG_KEY="new-banner"
-    ```
-    NOTE: you can optionally set the environment variable "CI" to skip evaluating the feature flag
+   ```bash
+   export LAUNCHDARKLY_SDK_KEY="<Your SDK KEY>"
+   export LAUNCHDARKLY_FLAG_KEY="new-banner"
+   ```
+   NOTE: you can optionally set the environment variable "CI" to skip evaluating the feature flag
    ```
    export CI="true"
-   ```
-   
+   ``` 
 1.  Clone the repo
     ```bash
     git clone git@github.com:wasabibob/my-weather-app
@@ -83,14 +82,7 @@ It's pretty simple...
    ##### macOS/Linux:
    ```zsh
    pip3 install -r requirements.txt
-   ```
-
-1. Create .env file for environment variables, and put your OpenWeatherMap API key and the LaunchDarkly Key in this file. From the top folder of the cloned repo.
-   ```bash
-   touch .env
-   echo "API_KEY=<put your OpenWeatherMap API key here>" >>.env
-   echo "LAUNCHDARKLY_SDK_KEY=<put your LaunchDarkly SDK key here>" >>.env # Consdiering we just set this variable earlier, this seems superfluous to me
-   ```    
+   ``` 
    
 ## Run Locally
    See the feature live Run the python app image in your local environment from the terminal window

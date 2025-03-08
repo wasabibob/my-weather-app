@@ -120,14 +120,14 @@ def register():
 @app.route('/weather')
 def get_weather():
     
-        city = request.args.get('city')
+    city = request.args.get('city')
     city = city if city else "Denver"
-    '''
+    
     # Check for empty strings or string with only spaces
-    if not bool(city.text.strip()):
+    if not bool(city.strip()):
         # You could render "City Not Found" instead like we do below
         city = "Denver"
-    '''
+    
     # Set up the evaluation context. This context should appear on your
     # LaunchDarkly contexts dashboard soon after you run the demo.
     #context = \
@@ -143,14 +143,6 @@ def get_weather():
     listener = ldclient.get().flag_tracker \
         .add_flag_value_change_listener(feature_flag_key, context, change_listener.flag_value_change_listener)
     
-    # Get the city from the query string
-    city = request.args.get('city')
-
-    # Check for empty strings or string with only spaces
-    if not bool(city.strip()):
-        # You could render "City Not Found" instead like we do below
-        city = "Denver"
-    
     weather_data = get_current_weather(city)
     app.logger.debug("weatther data: %s", weather_data)
     
@@ -158,23 +150,6 @@ def get_weather():
     if not weather_data['cod'] == 200:
         return render_template('city-not-found.html')
     
-    if flag_value is False:
-        return render_template(
-            "weather-plus.html",
-            title=weather_data["name"],
-            status=weather_data["weather"][0]["description"].capitalize(),
-            temp=f"{weather_data['main']['temp']:.1f}",
-            feels_like=f"{weather_data['main']['feels_like']:.1f}"
-        )
-    else:
-        return render_template(
-            "dashboard.html",
-            title=weather_data["name"],
-            status=weather_data["weather"][0]["description"].capitalize(),
-            temp=f"{weather_data['main']['temp']:.1f}",
-            feels_like=f"{weather_data['main']['feels_like']:.1f}"
-        )
-'''
     if flag_value is False:
         return render_template(
             "weather.html",
@@ -190,7 +165,7 @@ def get_weather():
             temp=f"{weather_data['main']['temp']:.1f}",
             feels_like=f"{weather_data['main']['feels_like']:.1f}"
         )
-'''
+
 def show_evaluation_result(key: str, value: bool):
     print()
     print(f"*** The {key} feature flag evaluates to {value}")
@@ -198,6 +173,7 @@ def show_evaluation_result(key: str, value: bool):
     if value:
         print()
         #print(f"*** The {key} feature flag evaluates to {value}")
+        
 class FlagValueChangeListener:
     def flag_value_change_listener(self, flag_change):
         show_evaluation_result(flag_change.key, flag_change.new_value)
@@ -213,13 +189,13 @@ if __name__ == "__main__":
 
     # Initialize the LaunchDarkly SDK
     ldclient.set_config(Config(sdk_key))
-
+    
     if not ldclient.get().is_initialized():
         print("*** SDK failed to initialize. Please check your internet connection and SDK credential for any typo.")
         exit()
-
+    
     print("*** SDK successfully initialized")
     
     app.run(host="0.0.0.0", debug=True, port=8000)
     #use serve if you want to use waitress or publish to render.com
-    #serve(app, host="0.0.0.0", port=8000)  
+    #serve(app, host="0.0.0.0", port=8000)
