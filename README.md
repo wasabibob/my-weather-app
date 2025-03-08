@@ -58,27 +58,35 @@ It's pretty simple...
     export LAUNCHDARKLY_FLAG_KEY="new-banner"
     ```
     NOTE: you can optionally set the environment variable "CI" to skip evaluating the feature flag
-    # Set to what? Most people won't be familiar with the concept of a blank ENV variable.
-
+   ```
+   export CI="true"
+   ```
+   
 1.  Clone the repo
     ```bash
     git clone git@github.com:wasabibob/my-weather-app
     ```
     
-1. Install Python Virtual Environment, waitress and the LaunchDarkly SDK
+1. Install Python Virtual Environment, upgrade pip. From the top folder of the cloned repo.
    ```bash
-   cd my-weather-app # A total nit, but I don't love including `cd` commands in example scripts, it can get confusing
    python3 -m venv .venv
    source .venv/bin/activate
-   pip install requests python-dotenv Flask
    pip install --upgrade pip
-   pip install waitress
-   pip install launchdarkly-server-sdk
    ```
-   
-1. Create .env file for environment variables, and put your OpenWeatherMap API key and the LaunchDarkly Key in this file
+   Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the required dependencies
+
+   ##### Windows:
+   ```zsh
+   pip install -r requirements.txt 
+   ```
+
+   ##### macOS/Linux:
+   ```zsh
+   pip3 install -r requirements.txt
+   ```
+
+1. Create .env file for environment variables, and put your OpenWeatherMap API key and the LaunchDarkly Key in this file. From the top folder of the cloned repo.
    ```bash
-   cd my-weather-app # See my comment above. If you actually just copy/paste these commands as is, this cd fails, since you're already in the directory
    touch .env
    echo "API_KEY=<put your OpenWeatherMap API key here>" >>.env
    echo "LAUNCHDARKLY_SDK_KEY=<put your LaunchDarkly SDK key here>" >>.env # Consdiering we just set this variable earlier, this seems superfluous to me
@@ -93,7 +101,7 @@ It's pretty simple...
    python3 weather.py
    ```
    Enter a city on the command line prompt and it will connect to the API and return weather data
-   * Note: If you recieve a 401 error here, wait a few minutes and try again. It takes OpenWeather a little while to initialize a new account.
+   * Note: If you receive a 401 error here, wait a few minutes and try again. It takes OpenWeather a little while to initialize a new account.
 
 * To run the this app in the Flask webserver. Once running, you can see the app by opening a browser and browsing to **localhost:8000**
    ```bash
