@@ -83,7 +83,33 @@ It's pretty simple...
    ```zsh
    pip3 install -r requirements.txt
    ``` 
-   
+1. Initialize the user database
+   ```
+   python3
+   >>> from server import db
+   >>> db.create_all()
+   >>> quit()
+   ```
+   Verify the table was create in the database
+   ```
+   sqlite3 database.db
+   sqlite> .tables
+   sqlite> .schema user
+   Ctl + C
+   ```
+   **Note:** The above squlite3 commands should return something like this:\
+   sqlite> .tables\
+   user\
+   sqlite> .schema user\
+   CREATE TABLE user (\
+        &emsp; id INTEGER NOT NULL, \
+        &emsp; username VARCHAR(20) NOT NULL, \
+        &emsp; password VARCHAR(80) NOT NULL, \
+        &emsp; country VARCHAR(20), \
+        &emsp; PRIMARY KEY (id), \
+        &emsp; UNIQUE (username)\
+   );
+
 ## Run Locally
    See the feature live Run the python app image in your local environment from the terminal window
    

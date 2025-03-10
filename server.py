@@ -14,7 +14,6 @@ from waitress import serve
 from dotenv import load_dotenv
 from threading import Lock, Event
 
-
 # Set sdk_key to your LaunchDarkly SDK key.
 sdk_key = os.getenv('LAUNCHDARKLY_SDK_KEY')
 
@@ -44,17 +43,20 @@ def city_not_found(weather_data):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
+    country = db.Column(db.String(20), nullable=True)
+    
 class RegisterForm(FlaskForm):
     username = StringField(validators=[
-                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
-
+                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
     password = PasswordField(validators=[
-                             InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
-
+                            InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
+    country = StringField(validators=[
+                            InputRequired(), Length(min=2, max=20)], render_kw={"placeholder": "Country"})
     submit = SubmitField('Register')
 
     def validate_username(self, username):
@@ -63,19 +65,23 @@ class RegisterForm(FlaskForm):
         if existing_user_username:
             raise ValidationError(
                 'That username already exists. Please choose a different one.')
+            
 class LoginForm(FlaskForm):
     username = StringField(validators=[
-                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
-
+                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
+    
     password = PasswordField(validators=[
-                             InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
-
+                            InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
+    
     submit = SubmitField('Login')
 
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    if current_user.is_authenticated:
+        return redirect(url_for('get_weather'))
+    else:
+        return redirect(url_for('login'))
  
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -110,7 +116,7 @@ def register():
 
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(username=form.username.data, password=hashed_password)
+        new_user = User(username=form.username.data, password=hashed_password, country=form.country.data)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
@@ -143,6 +149,18 @@ def get_weather():
     listener = ldclient.get().flag_tracker \
         .add_flag_value_change_listener(feature_flag_key, context, change_listener.flag_value_change_listener)
     
+        # Query all  users for debug
+    users = User.query.all()
+
+    # Print the data for debug
+    for user in users:
+        print(f"ID: {user.id}, Name: {user.username}, Country: {user.country}")
+
+    app.logger.debug("current user ID is %s", current_user.id)
+    username = current_user.username
+    app.logger.debug("user is %s", username)
+    country_code = current_user.country
+    app.logger.debug("country is %s", country_code)
     weather_data = get_current_weather(city)
     app.logger.debug("weatther data: %s", weather_data)
     
